@@ -1,9 +1,10 @@
 function setup() {
     createCanvas(680, 680)
 
-    noLoop();
+    // noLoop();
 }
 
+let particles = []; // 存放粒子
 function draw() {
     background(242, 242, 242);
     stroke(231, 206, 52);
@@ -14,9 +15,20 @@ function draw() {
     drawBlueBoxes();
     drawGrayBoxes();
     otherBox()
-    // drawYellowBoxes();
 
+    // 遍历所有粒子并更新、显示它们
+    for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].show();
+
+        // 如果粒子消失了，就从数组中删除它
+        if (particles[i].isOffScreen()) {
+            particles.splice(i, 1);
+        }
+    }
 }
+
+let redRandomText = [];
 
 function drawYellowLines() {
 
@@ -51,7 +63,6 @@ function drawRedBoxes() {
     noStroke();
 
     let RedBoxesColour = [152, 51, 43];
-
     let horizontalRedBoxesWidth = [
         15, 15, 16, 15, 15,
         15, 15, 15, 17, 17, 17,
@@ -85,6 +96,7 @@ function drawRedBoxes() {
         13, 13, 13, 13, 13
 
     ]
+
     let xStarts = [
         0.07, 0.233, 0.549, 0.89, 0.97,
         0.07, 0.549, 0.59, 0.89, 0.97, 0.97,
@@ -99,9 +111,8 @@ function drawRedBoxes() {
         0.187, 0.44, 0.5, 0.59, 0.68, 0.85, 0.97,
         0.04,
         0.07, 0.186, 0.625, 0.9, 0.97,
-
-
     ];
+
     let yStarts = [
         0, 0, 0, 0, 0,
         0.1, 0.117, 0.067, 0.107, 0.055, 0.107,
@@ -119,7 +130,12 @@ function drawRedBoxes() {
 
     ];
 
-
+    for (let i = 0; i < redRandomText.length; i++) {
+        if (redRandomText[i] !== null) {
+            createPar(xStarts[redRandomText[i]]*width, yStarts[redRandomText[i]]*width)
+            redRandomText[i] = null
+        }
+    }
     for (let i = 0; i < yStarts.length; i++) {
         // Place small boxes at the center of each line
         fill(RedBoxesColour);
@@ -173,6 +189,7 @@ function drawRedBoxes() {
         0.71, 0.82,
     ];
 
+
     for (let i = 0; i < xPositions.length; i++) {
         // Place small boxes at the center of each line
         fill(RedBoxesColour);
@@ -224,6 +241,7 @@ function drawBlueBoxes() {
         0.07, 0.125, 0.233, 0.4, 0.47, 0.549, 0.63, 0.73, 0.9,
         0.125, 0.125, 0.4, 0.44, 0.67, 0.72, 0.85,
     ]
+
     let yStarts = [
         0.034, 0.034, 0.034, 0.034,
         0.17, 0.17, 0.17, 0.17, 0.17,
@@ -237,6 +255,7 @@ function drawBlueBoxes() {
         0.866, 0.866, 0.866, 0.866, 0.866, 0.866, 0.866, 0.866, 0.866,
         0.958, 0.958, 0.958, 0.958, 0.958, 0.958, 0.958,
     ]
+
     for (let i = 0; i < yStarts.length; i++) {
         // Place small boxes at the center of each line
         fill(BlueBoxesColour);
@@ -292,6 +311,8 @@ function drawBlueBoxes() {
         0.747,
         0.234, 0.504, 0.747,
     ];
+    // console.log(yPositions.length);
+
 
     for (let i = 0; i < xPositions.length; i++) {
         // Place small boxes at the center of each line
@@ -400,10 +421,9 @@ function drawGrayBoxes() {
         0.05, 0.1, 0.147, 0.194, 0.26, 0.315, 0.694, 0.806, 0.886,
         0.506,
         0.053, 0.289, 0.422, 0.617, 0.66, 0.728, 0.899, 0.978,
-        0.076, 0.147, 0.196, 0.254, 0.423, 0.524, 0.613, 0.656, 0.728,0.9,
+        0.076, 0.147, 0.196, 0.254, 0.423, 0.524, 0.613, 0.656, 0.728, 0.9,
 
     ];
-
     for (let i = 0; i < xPositions.length; i++) {
         // Place small boxes at the center of each line
         fill(GrayBoxesColour);
@@ -455,6 +475,65 @@ function otherBox() {
     //     rect(680 * xPositions[i] - verticalGrayBoxesWidth[i] / 2, 680 * yPositions[i] - verticalGrayBoxesHeight[i] / 2, verticalGrayBoxesWidth[i], verticalGrayBoxesHeight[i]);
     // }
 }
+
+// 设置数组长度信息
+let redBoxHorizontal = 66
+let redBoxVertical = 25
+let blueBoxHorizontal = 53
+let blueBoxVertical = 35
+let grayBoxHorizontal = 62
+let grayBoxVertical = 70
+
+
+// 创建粒子
+function createPar(x, y) {
+    let numParticles = 50; // 可以根据需要调整粒子数量
+    for (let i = 0; i < numParticles; i++) {
+        let p = new Particle(x, y);
+        particles.push(p);
+    }
+}
+
+
+class Particle {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = random(5, 10);
+        this.speedX = random(-2, 2);
+        this.speedY = random(-2, 2);
+        this.alpha = 255;
+
+        // 给粒子随机颜色
+        this.colorStart = color(random(255), random(255), random(255)); // 起始颜色
+        this.colorEnd = color(random(255), random(255), random(255)); // 结束颜色
+    }
+
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.alpha -= 5; // 渐变消失
+
+        // 逐渐改变颜色
+        this.color = lerpColor(this.colorStart, this.colorEnd, 1 - this.alpha / 255);
+    }
+
+    show() {
+        fill(this.color.levels[0], this.color.levels[1], this.color.levels[2], this.alpha); // 使用粒子颜色
+        noStroke();
+        ellipse(this.x, this.y, this.size);
+    }
+
+    isOffScreen() {
+        return this.alpha <= 0;
+    }
+}
+
+
+setInterval(() => {
+    redRandomText = [int(random(redBoxHorizontal)), int(random(redBoxHorizontal)), int(random(redBoxHorizontal)), int(random(redBoxHorizontal))]
+}, 2000)
+
 
 function windowResized() {
     // resizeCanvas(windowWidth, windowHeight);
