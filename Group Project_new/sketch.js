@@ -6,7 +6,8 @@ function setup() {
 
 let particles = []; // 存放粒子
 function draw() {
-    background(242, 242, 242);
+    // background(242, 242, 242);
+    background(250, 250, 250);
     stroke(231, 206, 52);
     strokeCap(SQUARE)
 
@@ -29,33 +30,43 @@ function draw() {
 }
 
 let redRandomText = [];
+let blueRandomText = [];
+let grayRandomText = [];
 
 function drawYellowLines() {
 
     // Full Length Horizontal Lines
     let yPositions = [0.034, 0.17, 0.36, 0.445, 0.575, 0.64, 0.866, 0.958, 0.70, 0.798, 0.896, 0.74, 0.813, 0.74, 0.075, 0.298, 0.818, 0.51];
     let horizontalStrokes = [14, 16, 15, 15, 15, 15, 15, 13, 15, 15, 16, 15, 18, 25, 25, 45, 53, 38];
-    let xStarts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.07, 0.85, 0.85, 0.13, 0.13, 0.13, 0.85]
-    let xLength = [1, 1, 1, 1, 1, 1, 1, 1, 0.07, 0.07, 0.07, 0.55, 0.97, 0.97, 0.233, 0.233, 0.233, 0.97]
+    let xStarts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.07, 0.85, 0.85, 0.13, 0.13, 0.13, 0.85];
+    let xLength = [1, 1, 1, 1, 1, 1, 1, 1, 0.07, 0.07, 0.07, 0.55, 0.97, 0.97, 0.233, 0.233, 0.233, 0.97];
 
-
+    // Add dynamic effects to horizontal lines
     for (let i = 0; i < yPositions.length; i++) {
+        let offset = sin(frameCount * 0.05 + i) * 10; // Sinusoidal oscillation for vibration effect
+        let dynamicStrokeWeight = horizontalStrokes[i] + sin(frameCount * 0.1 + i) * 4; // Dynamic stroke weight
+        let dynamicLength = xLength[i] + sin(frameCount * 0.03 + i) * 0.05; // Dynamic line length
 
-        strokeWeight(horizontalStrokes[i]);
-        line(xStarts[i] * 680, 680 * yPositions[i], 680 * xLength[i], 680 * yPositions[i]);
-
+        strokeWeight(dynamicStrokeWeight);
+        stroke(231, 206, 52, 255); // Constant yellow stroke color
+        line(xStarts[i] * 680 + offset, 680 * yPositions[i], 680 * dynamicLength, 680 * yPositions[i]);
     }
 
     // Full Length Vertical lines
     let xPositions = [0.032, 0.07, 0.125, 0.233, 0.549, 0.59, 0.85, 0.89, 0.93, 0.97, 0.59, 0.661, 0.93, 0.93, 0.185, 0.445];
     let verticalStrokes = [15, 15, 15, 15, 17, 15, 15, 17, 15, 17, 15, 17, 15, 15, 30, 50];
     let verticalHeight = [0.355, 1, 1, 1, 1, 0.355, 1, 0.36, 0.12, 1, 1, 0.65, 0.45, 0.82, 0.445, 0.575];
-    let yStarts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.45, 0.45, 0.178, 0.63, 0.36, 0.36]
+    let yStarts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.45, 0.45, 0.178, 0.63, 0.36, 0.36];
 
+    // Add dynamic effects to vertical lines
     for (let i = 0; i < xPositions.length; i++) {
+        let offsetY = cos(frameCount * 0.1 + i) * 10; // Sinusoidal oscillation for vertical lines
+        let dynamicStrokeWeightVertical = verticalStrokes[i] + cos(frameCount * 0.07 + i) * 4; // Dynamic stroke weight
+        let dynamicHeight = verticalHeight[i] + cos(frameCount * 0.05 + i) * 0.05; // Dynamic line height
 
-        strokeWeight(verticalStrokes[i]);
-        line(680 * xPositions[i], yStarts[i] * 680, 680 * xPositions[i], 680 * verticalHeight[i]);
+        strokeWeight(dynamicStrokeWeightVertical);
+        stroke(231, 206, 52, 255); // Constant yellow stroke color
+        line(680 * xPositions[i], yStarts[i] * 680 + offsetY, 680 * xPositions[i], 680 * dynamicHeight * 680);
     }
 }
 
@@ -77,8 +88,6 @@ function drawRedBoxes() {
         15, 14, 14, 15, 16, 16, 15,
         17,
         15, 15, 15, 15, 17,
-
-
     ];
     let horizontalRedBoxesHeight = [
         30, 30, 30, 30, 30,
@@ -94,9 +103,7 @@ function drawRedBoxes() {
         15, 15, 15, 15, 15, 15, 15,
         15,
         13, 13, 13, 13, 13
-
-    ]
-
+    ];
     let xStarts = [
         0.07, 0.233, 0.549, 0.89, 0.97,
         0.07, 0.549, 0.59, 0.89, 0.97, 0.97,
@@ -112,7 +119,6 @@ function drawRedBoxes() {
         0.04,
         0.07, 0.186, 0.625, 0.9, 0.97,
     ];
-
     let yStarts = [
         0, 0, 0, 0, 0,
         0.1, 0.117, 0.067, 0.107, 0.055, 0.107,
@@ -127,22 +133,29 @@ function drawRedBoxes() {
         0.866, 0.866, 0.866, 0.866, 0.866, 0.866, 0.866,
         0.896,
         0.958, 0.958, 0.958, 0.958, 0.958,
-
     ];
-
-    for (let i = 0; i < redRandomText.length; i++) {
-        if (redRandomText[i] !== null) {
-            createPar(xStarts[redRandomText[i]]*width, yStarts[redRandomText[i]]*width)
-            redRandomText[i] = null
-        }
-    }
+    // 添加旋转、透明度变化、颜色渐变以及反弹效果
     for (let i = 0; i < yStarts.length; i++) {
-        // Place small boxes at the center of each line
-        fill(RedBoxesColour);
-        rect(680 * xStarts[i] - horizontalRedBoxesWidth[i] / 2, 680 * yStarts[i] - horizontalRedBoxesHeight[i] / 2, horizontalRedBoxesWidth[i], horizontalRedBoxesHeight[i]);
+        let xOffset = sin(frameCount * 0.1 + i) * 5; // 水平方向随机位移
+        let yOffset = cos(frameCount * 0.1 + i) * 5; // 垂直方向随机位移
+        let dynamicWidth = horizontalRedBoxesWidth[i] + sin(frameCount * 0.05 + i) * 2; // 脉动宽度
+        let dynamicHeight = horizontalRedBoxesHeight[i] + cos(frameCount * 0.05 + i) * 2; // 脉动高度
+
+        // 随时间改变颜色
+        let r = map(sin(frameCount * 0.05 + i), -1, 1, 100, 255);
+        let g = map(cos(frameCount * 0.05 + i), -1, 1, 50, 150);
+        let b = map(sin(frameCount * 0.05 + i + 1), -1, 1, 30, 100);
+        fill(r, g, b, 255); // 颜色变化，并加入透明度
+
+        // 旋转效果
+        push();
+        translate(680 * xStarts[i] + xOffset, 680 * yStarts[i] + yOffset);
+        rotate(sin(frameCount * 0.02 + i) * PI / 4); // 随着时间旋转
+        rect(-dynamicWidth / 2, -dynamicHeight / 2, dynamicWidth, dynamicHeight);
+        pop();
     }
 
-
+    // 添加垂直盒子的相同效果
     let verticalRedBoxesWidth = [
         30, 45, 15, 60, 50, 43, 40, 58, 15,
         15, 15,
@@ -175,7 +188,6 @@ function drawRedBoxes() {
         0.662,
         0.85,
         0.97, 0.97,
-
     ];
     let yPositions = [
         0.1, 0.088, 0.276, 0.53, 0.971, 0.235, 0.780, 0.529, 0.51,
@@ -189,15 +201,27 @@ function drawRedBoxes() {
         0.71, 0.82,
     ];
 
-
     for (let i = 0; i < xPositions.length; i++) {
-        // Place small boxes at the center of each line
-        fill(RedBoxesColour);
-        rect(680 * xPositions[i] - verticalRedBoxesWidth[i] / 2, 680 * yPositions[i] - verticalRedBoxesHeight[i] / 2, verticalRedBoxesWidth[i], verticalRedBoxesHeight[i]);
+        let xOffset = sin(frameCount * 0.1 + i) * 5; // 水平方向随机位移
+        let yOffset = cos(frameCount * 0.1 + i) * 5; // 垂直方向随机位移
+        let dynamicWidth = verticalRedBoxesWidth[i] + sin(frameCount * 0.05 + i) * 2; // 脉动宽度
+        let dynamicHeight = verticalRedBoxesHeight[i] + cos(frameCount * 0.05 + i) * 2; // 脉动高度
+
+        // 随时间改变颜色
+        let r = map(sin(frameCount * 0.05 + i), -1, 1, 100, 255);
+        let g = map(cos(frameCount * 0.05 + i), -1, 1, 50, 150);
+        let b = map(sin(frameCount * 0.05 + i + 1), -1, 1, 30, 100);
+        fill(r, g, b, 180); // 颜色变化，并加入透明度
+
+        // 旋转效果
+        push();
+        translate(680 * xPositions[i] + xOffset, 680 * yPositions[i] + yOffset);
+        rotate(sin(frameCount * 0.02 + i) * PI / 4); // 随着时间旋转
+        rect(-dynamicWidth / 2, -dynamicHeight / 2, dynamicWidth, dynamicHeight);
+        pop();
     }
-
-
 }
+
 
 function drawBlueBoxes() {
     noStroke();
@@ -262,7 +286,12 @@ function drawBlueBoxes() {
         rect(680 * xStarts[i] - horizontalBlueBoxesWidth[i] / 2, 680 * yStarts[i] - horizontalBlueBoxesHeight[i] / 2, horizontalBlueBoxesWidth[i], horizontalBlueBoxesHeight[i]);
     }
 
-
+    for (let i = 0; i < blueRandomText.length; i++) {
+        if (blueRandomText[i] !== null) {
+            createPar(xStarts[blueRandomText[i]] * width, yStarts[blueRandomText[i]] * width)
+            blueRandomText[i] = null
+        }
+    }
     let verticalBlueBoxesWidth = [
         40, 65, 37, 40, 38, 50,
         15, 15,
@@ -374,7 +403,12 @@ function drawGrayBoxes() {
         rect(680 * xStarts[i] - horizontalGrayBoxesWidth[i] / 2, 680 * yStarts[i] - horizontalGrayBoxesHeight[i] / 2, horizontalGrayBoxesWidth[i], horizontalGrayBoxesHeight[i]);
     }
 
-
+    for (let i = 0; i < grayRandomText.length; i++) {
+        if (grayRandomText[i] !== null) {
+            createPar(xStarts[grayRandomText[i]] * width, yStarts[grayRandomText[i]] * width)
+            grayRandomText[i] = null
+        }
+    }
     let verticalGrayBoxesWidth = [
         32, 20, 16, 50, 35, 28, 20,
         15, 15,
@@ -494,7 +528,6 @@ function createPar(x, y) {
     }
 }
 
-
 class Particle {
     constructor(x, y) {
         this.x = x;
@@ -533,6 +566,12 @@ class Particle {
 setInterval(() => {
     redRandomText = [int(random(redBoxHorizontal)), int(random(redBoxHorizontal)), int(random(redBoxHorizontal)), int(random(redBoxHorizontal))]
 }, 2000)
+setInterval(() => {
+    blueRandomText = [int(random(blueBoxHorizontal)), int(random(blueBoxHorizontal)), int(random(blueBoxHorizontal))]
+}, 3000)
+setInterval(() => {
+    grayRandomText = [int(random(grayBoxHorizontal)), int(random(grayBoxHorizontal)), int(random(grayBoxHorizontal))]
+}, 4000)
 
 
 function windowResized() {
