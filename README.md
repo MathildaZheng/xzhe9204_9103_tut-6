@@ -5,12 +5,27 @@
 3. Click anywhere on the canvas to start playing the music.
 4. Once the music starts playing, some squares begin to jump to the rhythm, dynamically changing based on the volume.
 5. Press the space bar to pause the audio and all audio-based effects.
+## Animation Method
+I choosed **Time-Based** as my main animation
+## Animation Properties and Differences from Other Team Members' Work
+1. The color changes over time.
+2. Small squares rotate and move over time, creating a vibrating effect.
+3. Added a fireworks element where particles are generated in a specific area upon click, gradually fading in color as they move, adding a unique visual element not present in my team members' work.
+4. Music is added, and when clicked, some squares begin to jump to the rhythm of the music. Pressing the space bar pauses the music, and the squares return to their original motion.
+### Compared to Other Team Members:
+While some team members focus on single color changes or scaling effects, my work achieves a layered effect by combining color, rotation, and scaling. Different types of shapes (red, blue, and gray boxes) have distinct animation properties, timing settings and color change, creating a strong contrast on the canvas.
+## Coding Changed
+**Color Change Optimization**: I refined the color-changing logic to transition smoothly over time, enhancing the animation's visual appeal. The color gradient is implemented using `lerpColor`, allowing each frame's color to transition smoothly with volume changes while using `frameCount` to introduce subtle temporal variations.
 
-## Part 1: Imaging Technique Inspiration
+**Square Rotation and Movement**: To add depth, I incorporated rotation and movement for small squares, creating a time-driven vibrating effect that adds dynamism to the overall animation. The code utilizes multiple `sin` and `cos` oscillations to animate lines and box elements smoothly and continuously, ensuring fluid motion.
 
-Inspired by the aesthetics of **glitch art**,  use digital errors or distortions to create visually compelling abstract visual effects. This technique often involves manipulating image pixels, corrupting data, or shifting color channels to simulate technical glitches. Aesthetics include digital noise, screen tearing, or pixelated chaos to create fragmented images.
+**Firework Effect**: I introduced a firework element, generating particle effects in specific areas upon canvas click, with a color gradient fade-out effect, adding a new level of interactivity to the animation.
 
-My goal is to incorporate pixel scrambling and color shifting into my projects, combining pixel displacement and color channel shifting to evoke a sense of fragmentation and chaos to create a unique sense of fragmentation and unpredictability. This technique was essential to the assignment's creative exploration of image processing.
+**Music and Animation Sync**: I added a music playback feature, dynamically controlling the jumping frequency of squares based on volume, synchronizing the animation with the music’s rhythm, enhancing viewer immersion. The added space bar pause function allows users to easily control the music and animation effects.
+## Technical
+The color interpolation method lerpColor was referenced from the p5.js gradient creation example. I chose this technique because it enables smooth color transitions based on volume.  
+[linkText] https://p5js.org/reference/p5/lerpColor/
 
-![Image caption](image/pic1.jpg)
-![Image caption](image/pic2.jpg)
+Using frameCount is effective for implementing time-driven effects.[linkText] https://p5js.org/reference/p5/frameCount/
+
+I used blendMode() to layer squares, controlling transparency and blending modes.
