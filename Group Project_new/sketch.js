@@ -226,6 +226,7 @@ function drawRedBoxes() {
 function drawBlueBoxes() {
     noStroke();
     let BlueBoxesColour = [67, 104, 186];
+
     let horizontalBlueBoxesWidth = [
         14, 17, 14, 14,
         14, 16, 17, 15, 17,
@@ -238,7 +239,7 @@ function drawBlueBoxes() {
         15,
         15, 15, 15, 15, 14, 17, 17, 16, 16,
         15, 15, 15, 12, 15, 15, 15,
-    ]
+    ];
     let horizontalBlueBoxesHeight = [
         14, 14, 14, 14,
         15, 15, 16, 17, 17,
@@ -251,7 +252,7 @@ function drawBlueBoxes() {
         15,
         15, 15, 15, 15, 15, 15, 15, 15, 15,
         13, 13, 13, 13, 13, 13, 13,
-    ]
+    ];
     let xStarts = [
         0.032, 0.16, 0.85, 0.93,
         0.125, 0.3, 0.549, 0.850, 0.97,
@@ -264,7 +265,7 @@ function drawBlueBoxes() {
         0.035,
         0.07, 0.125, 0.233, 0.4, 0.47, 0.549, 0.63, 0.73, 0.9,
         0.125, 0.125, 0.4, 0.44, 0.67, 0.72, 0.85,
-    ]
+    ];
 
     let yStarts = [
         0.034, 0.034, 0.034, 0.034,
@@ -278,20 +279,36 @@ function drawBlueBoxes() {
         0.798,
         0.866, 0.866, 0.866, 0.866, 0.866, 0.866, 0.866, 0.866, 0.866,
         0.958, 0.958, 0.958, 0.958, 0.958, 0.958, 0.958,
-    ]
+    ];
+    let shadowOffset = 4; // 阴影的偏移量
 
+    // 绘制水平方向上的蓝色盒子
     for (let i = 0; i < yStarts.length; i++) {
-        // Place small boxes at the center of each line
-        fill(BlueBoxesColour);
-        rect(680 * xStarts[i] - horizontalBlueBoxesWidth[i] / 2, 680 * yStarts[i] - horizontalBlueBoxesHeight[i] / 2, horizontalBlueBoxesWidth[i], horizontalBlueBoxesHeight[i]);
+        let xOffset = sin(frameCount * 0.05 + i) * 5; // 水平方向的漂浮效果
+        let yOffset = cos(frameCount * 0.05 + i) * 5; // 垂直方向的漂浮效果
+
+        // 颜色渐变效果
+        let r = map(sin(frameCount * 0.02 + i), -1, 1, 50, 100);
+        let g = map(sin(frameCount * 0.03 + i), -1, 1, 100, 150);
+        let b = map(cos(frameCount * 0.04 + i), -1, 1, 150, 255);
+
+        fill(r, g, b, 200); // 渐变颜色和透明度
+
+        // 模拟蓝色盒子的光晕
+        let shadowOffset = 4;
+        fill(50, 50, 150, 100); // 阴影颜色
+        rect(680 * xStarts[i] + xOffset - horizontalBlueBoxesWidth[i] / 2 + shadowOffset,
+            680 * yStarts[i] + yOffset - horizontalBlueBoxesHeight[i] / 2 + shadowOffset,
+            horizontalBlueBoxesWidth[i], horizontalBlueBoxesHeight[i]);
+
+        // 绘制盒子
+        fill(r, g, b, 200);
+        rect(680 * xStarts[i] + xOffset - horizontalBlueBoxesWidth[i] / 2,
+            680 * yStarts[i] + yOffset - horizontalBlueBoxesHeight[i] / 2,
+            horizontalBlueBoxesWidth[i], horizontalBlueBoxesHeight[i]);
     }
 
-    for (let i = 0; i < blueRandomText.length; i++) {
-        if (blueRandomText[i] !== null) {
-            createPar(xStarts[blueRandomText[i]] * width, yStarts[blueRandomText[i]] * width)
-            blueRandomText[i] = null
-        }
-    }
+    // 绘制垂直方向上的蓝色盒子
     let verticalBlueBoxesWidth = [
         40, 65, 37, 40, 38, 50,
         15, 15,
@@ -340,13 +357,29 @@ function drawBlueBoxes() {
         0.747,
         0.234, 0.504, 0.747,
     ];
-    // console.log(yPositions.length);
-
 
     for (let i = 0; i < xPositions.length; i++) {
-        // Place small boxes at the center of each line
-        fill(BlueBoxesColour);
-        rect(680 * xPositions[i] - verticalBlueBoxesWidth[i] / 2, 680 * yPositions[i] - verticalBlueBoxesHeight[i] / 2, verticalBlueBoxesWidth[i], verticalBlueBoxesHeight[i]);
+        let xOffset = sin(frameCount * 0.1 + i) * 5; // 水平方向的漂浮效果
+        let yOffset = cos(frameCount * 0.1 + i) * 5; // 垂直方向的漂浮效果
+
+        // 同样的渐变效果
+        let r = map(sin(frameCount * 0.02 + i), -1, 1, 50, 100);
+        let g = map(sin(frameCount * 0.03 + i), -1, 1, 100, 150);
+        let b = map(cos(frameCount * 0.04 + i), -1, 1, 150, 255);
+
+        fill(r, g, b, 200); // 渐变颜色和透明度
+
+        // 绘制阴影
+        fill(50, 50, 150, 100); // 阴影颜色
+        rect(680 * xPositions[i] + xOffset - verticalBlueBoxesWidth[i] / 2 + shadowOffset,
+            680 * yPositions[i] + yOffset - verticalBlueBoxesHeight[i] / 2 + shadowOffset,
+            verticalBlueBoxesWidth[i], verticalBlueBoxesHeight[i]);
+
+        // 绘制垂直方向的盒子
+        fill(r, g, b, 200);
+        rect(680 * xPositions[i] + xOffset - verticalBlueBoxesWidth[i] / 2,
+            680 * yPositions[i] + yOffset - verticalBlueBoxesHeight[i] / 2,
+            verticalBlueBoxesWidth[i], verticalBlueBoxesHeight[i]);
     }
 }
 
@@ -494,20 +527,7 @@ function otherBox() {
         17
     );
 
-    // let verticalGrayBoxesWidth = [32, 20, 16, 50, 35];
-    // let verticalGrayBoxesHeight = [15, 16, 16, 36, 25];
-    // let xPositions = [
-    //     0.180, 0.181, 0.185, 0.445, 0.742,
-    // ];
-    // let yPositions = [
-    //     0.103, 0.3, 0.4, 0.5, 0.507,
-    // ];
-    //
-    // for (let i = 0; i < xPositions.length; i++) {
-    //     // Place small boxes at the center of each line
-    //     fill(GrayBoxesColour);
-    //     rect(680 * xPositions[i] - verticalGrayBoxesWidth[i] / 2, 680 * yPositions[i] - verticalGrayBoxesHeight[i] / 2, verticalGrayBoxesWidth[i], verticalGrayBoxesHeight[i]);
-    // }
+   
 }
 
 // 设置数组长度信息
@@ -575,6 +595,5 @@ setInterval(() => {
 
 
 function windowResized() {
-    // resizeCanvas(windowWidth, windowHeight);
     draw();
 }
