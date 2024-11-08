@@ -1,4 +1,5 @@
 # xzhe9204_9103_tut-6
+Please through HTML click "Go Live" to check the work, for unknow researn js can't open the work.
 ## Interaction Instructions
 1. When the page opens, the small squares automatically start animating.
 2. Fireworks appear and disappear over time.
