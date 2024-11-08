@@ -527,7 +527,6 @@ function otherBox() {
         17
     );
 
-   
 }
 
 // 设置数组长度信息
@@ -595,5 +594,6 @@ setInterval(() => {
 
 
 function windowResized() {
+    // resizeCanvas(windowWidth, windowHeight);
     draw();
 }
