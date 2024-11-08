@@ -1,10 +1,18 @@
-function setup() {
-    createCanvas(680, 680)
-
-    // noLoop();
+let song;
+let amplitude; // Used for storing volume analysis
+function preload() {
+    // Load music file
+    song = loadSound('./music.mp3');
 }
 
-let particles = []; // 存放粒子
+function setup() {
+    createCanvas(680, 680)
+    // Music auto-play
+    amplitude = new p5.Amplitude(); // Create an amplitude analyzer
+    amplitude.setInput(song); // Set audio input for amplitude analyzer
+}
+
+let particles = []; // Array to store particles
 function draw() {
     // background(242, 242, 242);
     background(250, 250, 250);
@@ -17,12 +25,12 @@ function draw() {
     drawGrayBoxes();
     otherBox()
 
-    // 遍历所有粒子并更新、显示它们
+    // Iterate over all particles, update and display them
     for (let i = particles.length - 1; i >= 0; i--) {
         particles[i].update();
         particles[i].show();
 
-        // 如果粒子消失了，就从数组中删除它
+        // Remove particle from array if it goes off-screen
         if (particles[i].isOffScreen()) {
             particles.splice(i, 1);
         }
@@ -65,7 +73,7 @@ function drawYellowLines() {
         let dynamicHeight = verticalHeight[i] + cos(frameCount * 0.05 + i) * 0.05; // Dynamic line height
 
         strokeWeight(dynamicStrokeWeightVertical);
-        stroke(231, 206, 52, 255); // Constant yellow stroke color
+        stroke(234,213,38); // Constant yellow stroke color
         line(680 * xPositions[i], yStarts[i] * 680 + offsetY, 680 * xPositions[i], 680 * dynamicHeight * 680);
     }
 }
@@ -134,28 +142,28 @@ function drawRedBoxes() {
         0.896,
         0.958, 0.958, 0.958, 0.958, 0.958,
     ];
-    // 添加旋转、透明度变化、颜色渐变以及反弹效果
+    // Add rotation, transparency changes, color gradient, and bounce effect
     for (let i = 0; i < yStarts.length; i++) {
-        let xOffset = sin(frameCount * 0.1 + i) * 5; // 水平方向随机位移
-        let yOffset = cos(frameCount * 0.1 + i) * 5; // 垂直方向随机位移
-        let dynamicWidth = horizontalRedBoxesWidth[i] + sin(frameCount * 0.05 + i) * 2; // 脉动宽度
-        let dynamicHeight = horizontalRedBoxesHeight[i] + cos(frameCount * 0.05 + i) * 2; // 脉动高度
+        let xOffset = sin(frameCount * 0.1 + i) * 5; // Horizontal random offset
+        let yOffset = cos(frameCount * 0.1 + i) * 5; // Vertical random offset
+        let dynamicWidth = horizontalRedBoxesWidth[i] + sin(frameCount * 0.05 + i) * 2; // Pulsating width
+        let dynamicHeight = horizontalRedBoxesHeight[i] + cos(frameCount * 0.05 + i) * 2; // Pulsating height
 
-        // 随时间改变颜色
+        // Change color over time
         let r = map(sin(frameCount * 0.05 + i), -1, 1, 100, 255);
         let g = map(cos(frameCount * 0.05 + i), -1, 1, 50, 150);
         let b = map(sin(frameCount * 0.05 + i + 1), -1, 1, 30, 100);
-        fill(r, g, b, 255); // 颜色变化，并加入透明度
+        fill(r, g, b, 255); // Color change with added transparency
 
-        // 旋转效果
+        // Rotation effect
         push();
         translate(680 * xStarts[i] + xOffset, 680 * yStarts[i] + yOffset);
-        rotate(sin(frameCount * 0.02 + i) * PI / 4); // 随着时间旋转
+        rotate(sin(frameCount * 0.02 + i) * PI / 4); // Rotate over time
         rect(-dynamicWidth / 2, -dynamicHeight / 2, dynamicWidth, dynamicHeight);
         pop();
     }
 
-    // 添加垂直盒子的相同效果
+    // Apply the same effects to vertical boxes
     let verticalRedBoxesWidth = [
         30, 45, 15, 60, 50, 43, 40, 58, 15,
         15, 15,
@@ -200,24 +208,28 @@ function drawRedBoxes() {
         0.709,
         0.71, 0.82,
     ];
+    // Get the volume level
+    let level = amplitude.getLevel(); // Get the current volume level
 
+    // Parameters affected by volume level
+    let jumpAmount = map(level, 0, 0.3, 0.5, 2); // The higher the volume, the larger the jump
     for (let i = 0; i < xPositions.length; i++) {
-        let xOffset = sin(frameCount * 0.1 + i) * 5; // 水平方向随机位移
-        let yOffset = cos(frameCount * 0.1 + i) * 5; // 垂直方向随机位移
-        let dynamicWidth = verticalRedBoxesWidth[i] + sin(frameCount * 0.05 + i) * 2; // 脉动宽度
-        let dynamicHeight = verticalRedBoxesHeight[i] + cos(frameCount * 0.05 + i) * 2; // 脉动高度
+        let xOffset = sin(frameCount * 0.1 + i) * 5; // Horizontal random offset
+        let yOffset = cos(frameCount * 0.1 + i) * 5; /// Vertical random offset
+        let dynamicWidth = verticalRedBoxesWidth[i] + sin(frameCount * 0.05 + i) * 2; // Pulsating width
+        let dynamicHeight = verticalRedBoxesHeight[i] + cos(frameCount * 0.05 + i) * 2; // Pulsating height
 
-        // 随时间改变颜色
+        // Change color over time
         let r = map(sin(frameCount * 0.05 + i), -1, 1, 100, 255);
         let g = map(cos(frameCount * 0.05 + i), -1, 1, 50, 150);
         let b = map(sin(frameCount * 0.05 + i + 1), -1, 1, 30, 100);
-        fill(r, g, b, 180); // 颜色变化，并加入透明度
+        fill(r, g, b, 180); // Color change with added transparency
 
-        // 旋转效果
+        // Rotation effect
         push();
         translate(680 * xPositions[i] + xOffset, 680 * yPositions[i] + yOffset);
-        rotate(sin(frameCount * 0.02 + i) * PI / 4); // 随着时间旋转
-        rect(-dynamicWidth / 2, -dynamicHeight / 2, dynamicWidth, dynamicHeight);
+        rotate(sin(frameCount * 0.02 + i) * PI / 4); // Rotate over time
+        rect(-dynamicWidth / 2, -dynamicHeight / 2, dynamicWidth * jumpAmount, dynamicHeight * jumpAmount);
         pop();
     }
 }
@@ -227,6 +239,11 @@ function drawBlueBoxes() {
     noStroke();
     let BlueBoxesColour = [67, 104, 186];
 
+    // Get the volume level
+    let level = amplitude.getLevel(); // Get the current volume level
+
+    // Parameters affected by volume level
+    let jumpAmount = map(level, 0, 0.3, 0.5, 2); // The higher the volume, the larger the jump
     let horizontalBlueBoxesWidth = [
         14, 17, 14, 14,
         14, 16, 17, 15, 17,
@@ -280,35 +297,28 @@ function drawBlueBoxes() {
         0.866, 0.866, 0.866, 0.866, 0.866, 0.866, 0.866, 0.866, 0.866,
         0.958, 0.958, 0.958, 0.958, 0.958, 0.958, 0.958,
     ];
-    let shadowOffset = 4; // 阴影的偏移量
+    let shadowOffset = 4; // Offset for the shadow
 
-    // 绘制水平方向上的蓝色盒子
+    // Draw blue boxes horizontally
     for (let i = 0; i < yStarts.length; i++) {
-        let xOffset = sin(frameCount * 0.05 + i) * 5; // 水平方向的漂浮效果
-        let yOffset = cos(frameCount * 0.05 + i) * 5; // 垂直方向的漂浮效果
+        let xOffset = sin(frameCount * 0.05 + i) * 5; // Horizontal floating effect
+        let yOffset = cos(frameCount * 0.05 + i) * 5; // Vertical floating effect
 
-        // 颜色渐变效果
+        // Color gradient effect
         let r = map(sin(frameCount * 0.02 + i), -1, 1, 50, 100);
         let g = map(sin(frameCount * 0.03 + i), -1, 1, 100, 150);
         let b = map(cos(frameCount * 0.04 + i), -1, 1, 150, 255);
 
-        fill(r, g, b, 200); // 渐变颜色和透明度
+        fill(r, g, b, 200); // Gradient color and transparency
 
-        // 模拟蓝色盒子的光晕
-        let shadowOffset = 4;
-        fill(50, 50, 150, 100); // 阴影颜色
-        rect(680 * xStarts[i] + xOffset - horizontalBlueBoxesWidth[i] / 2 + shadowOffset,
-            680 * yStarts[i] + yOffset - horizontalBlueBoxesHeight[i] / 2 + shadowOffset,
-            horizontalBlueBoxesWidth[i], horizontalBlueBoxesHeight[i]);
-
-        // 绘制盒子
+        // Draw the box
         fill(r, g, b, 200);
-        rect(680 * xStarts[i] + xOffset - horizontalBlueBoxesWidth[i] / 2,
-            680 * yStarts[i] + yOffset - horizontalBlueBoxesHeight[i] / 2,
-            horizontalBlueBoxesWidth[i], horizontalBlueBoxesHeight[i]);
+        rect(680 * xStarts[i] + xOffset - (horizontalBlueBoxesWidth[i] * jumpAmount) / 2,
+            680 * yStarts[i] + yOffset - (horizontalBlueBoxesHeight[i] * jumpAmount) / 2,
+            horizontalBlueBoxesWidth[i] * jumpAmount, horizontalBlueBoxesHeight[i] * jumpAmount);
     }
 
-    // 绘制垂直方向上的蓝色盒子
+    // Draw vertical blue boxes
     let verticalBlueBoxesWidth = [
         40, 65, 37, 40, 38, 50,
         15, 15,
@@ -359,27 +369,27 @@ function drawBlueBoxes() {
     ];
 
     for (let i = 0; i < xPositions.length; i++) {
-        let xOffset = sin(frameCount * 0.1 + i) * 5; // 水平方向的漂浮效果
-        let yOffset = cos(frameCount * 0.1 + i) * 5; // 垂直方向的漂浮效果
+        let xOffset = sin(frameCount * 0.1 + i) * 5; // Horizontal floating effect
+        let yOffset = cos(frameCount * 0.1 + i) * 5; // Vertical floating effect
 
-        // 同样的渐变效果
+        // Gradient color effect
         let r = map(sin(frameCount * 0.02 + i), -1, 1, 50, 100);
         let g = map(sin(frameCount * 0.03 + i), -1, 1, 100, 150);
         let b = map(cos(frameCount * 0.04 + i), -1, 1, 150, 255);
 
-        fill(r, g, b, 200); // 渐变颜色和透明度
+        fill(r, g, b, 200); // Gradient color and transparency
 
-        // 绘制阴影
-        fill(50, 50, 150, 100); // 阴影颜色
-        rect(680 * xPositions[i] + xOffset - verticalBlueBoxesWidth[i] / 2 + shadowOffset,
-            680 * yPositions[i] + yOffset - verticalBlueBoxesHeight[i] / 2 + shadowOffset,
+        // Draw shadow
+        fill(70,106,190); // Shadow color
+        rect(680 * xPositions[i] + xOffset - (verticalBlueBoxesWidth[i]+jumpAmount) / 2,
+            680 * yPositions[i] + yOffset - (verticalBlueBoxesHeight[i]+jumpAmount) / 2,
             verticalBlueBoxesWidth[i], verticalBlueBoxesHeight[i]);
 
-        // 绘制垂直方向的盒子
+        // Draw the vertical box
         fill(r, g, b, 200);
-        rect(680 * xPositions[i] + xOffset - verticalBlueBoxesWidth[i] / 2,
-            680 * yPositions[i] + yOffset - verticalBlueBoxesHeight[i] / 2,
-            verticalBlueBoxesWidth[i], verticalBlueBoxesHeight[i]);
+        rect(680 * xPositions[i] + xOffset - (verticalBlueBoxesWidth[i] * jumpAmount) / 2,
+            680 * yPositions[i] + yOffset - (verticalBlueBoxesHeight[i] * jumpAmount) / 2,
+            verticalBlueBoxesWidth[i] * jumpAmount, verticalBlueBoxesHeight[i] * jumpAmount);
     }
 }
 
@@ -500,36 +510,42 @@ function drawGrayBoxes() {
 
 function otherBox() {
     noStroke();
+    // Get volume level
+    let level = amplitude.getLevel(); // Current volume level
+
+    // Parameters affected by volume level
+    let jumpAmount1 = map(level, 0, 0.5, 0.5, 1.5); // The higher the volume, the greater the jump
+    let jumpAmount2 = map(level, 0, 0.5, 0.3, 2); // The higher the volume, the greater the jump
     let RedBoxesColour = [152, 51, 43];
     let YellowBoxesColour = [231, 206, 52];
     fill(RedBoxesColour);
-    rect(680 * 0.701 - 65 / 2,
-        680 * 0.276 - 50 / 2,
-        65,
-        50
+    rect(680 * 0.701 - (65 * jumpAmount1) / 2,
+        680 * 0.276 - (50 * jumpAmount2) / 2,
+        (65 * jumpAmount1),
+        (50 * jumpAmount2)
     );
 
     fill(YellowBoxesColour);
-    rect(680 * 0.703 - 35 / 2,
-        680 * 0.279 - 25 / 2,
-        35,
-        25
+    rect(680 * 0.703 - (35 * jumpAmount1) / 2,
+        680 * 0.279 - (25 * jumpAmount2) / 2,
+        (35 * jumpAmount1),
+        (25 * jumpAmount2)
     );
 
-    rect(680 * 0.322 - 30 / 2,
-        680 * 0.518 - 25 / 2,
-        30,
-        25
+    rect(680 * 0.322 - (30 * jumpAmount1) / 2,
+        680 * 0.518 - (25 * jumpAmount2) / 2,
+        30 * jumpAmount1,
+        25 * jumpAmount2
     );
-    rect(680 * 0.321 - 50 / 2,
-        680 * 0.465 - 17 / 2,
-        50,
-        17
+    rect(680 * 0.321 - (50 * jumpAmount1) / 2,
+        680 * 0.465 - (17 * jumpAmount2) / 2,
+        50 * jumpAmount1,
+        17 * jumpAmount2
     );
 
 }
 
-// 设置数组长度信息
+// Set array length information
 let redBoxHorizontal = 66
 let redBoxVertical = 25
 let blueBoxHorizontal = 53
@@ -537,10 +553,18 @@ let blueBoxVertical = 35
 let grayBoxHorizontal = 62
 let grayBoxVertical = 70
 
+// Music playback status
+let songType = false;
+function mousePressed() {
+    if(!songType){
+        song.play();
+        songType = true
+    }
+}
 
-// 创建粒子
+// Create particles
 function createPar(x, y) {
-    let numParticles = 50; // 可以根据需要调整粒子数量
+    let numParticles = 50; // Adjust particle count as needed
     for (let i = 0; i < numParticles; i++) {
         let p = new Particle(x, y);
         particles.push(p);
@@ -556,22 +580,22 @@ class Particle {
         this.speedY = random(-2, 2);
         this.alpha = 255;
 
-        // 给粒子随机颜色
-        this.colorStart = color(random(255), random(255), random(255)); // 起始颜色
-        this.colorEnd = color(random(255), random(255), random(255)); // 结束颜色
+        // Assign random color to the particle
+        this.colorStart = color(36, 57, 255); // Starting color
+        this.colorEnd = color(204, 209, 255); // // Ending color
     }
 
     update() {
         this.x += this.speedX;
         this.y += this.speedY;
-        this.alpha -= 5; // 渐变消失
+        this.alpha -= 5; // Gradual fade
 
-        // 逐渐改变颜色
+        // Gradually change color
         this.color = lerpColor(this.colorStart, this.colorEnd, 1 - this.alpha / 255);
     }
 
     show() {
-        fill(this.color.levels[0], this.color.levels[1], this.color.levels[2], this.alpha); // 使用粒子颜色
+        fill(this.color.levels[0], this.color.levels[1], this.color.levels[2], this.alpha); // Use particle color
         noStroke();
         ellipse(this.x, this.y, this.size);
     }
@@ -592,8 +616,17 @@ setInterval(() => {
     grayRandomText = [int(random(grayBoxHorizontal)), int(random(grayBoxHorizontal)), int(random(grayBoxHorizontal))]
 }, 4000)
 
+// Triggered when a key is pressed
+function keyPressed() {
+    if (keyCode === 32) {
+        if(songType){
+            song.pause();
+            songType = false
+        }
+    }
+}
 
 function windowResized() {
-    // resizeCanvas(windowWidth, windowHeight);
+    resizeCanvas(680, 680);
     draw();
 }
